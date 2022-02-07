@@ -1,11 +1,21 @@
 'use strict';
 
+const RecruitmentDAO = require('../integration/RecruitmentDAO');
+const PersonDTO = require('../model/PersonDTO');
+
+/**
+ * Controller class. This class is responsible of calling 
+ * the model and integration layers.
+ * 
+ */
 class Controller {
     /**
      * Creates an instance.
      */
     constructor() {
         // Shall connect to database by creating a DAO-object
+        this.recruitmentDAO = new RecruitmentDAO();
+        this.transactionManager = this.recruitmentDAO.getTransactionManager();
     }
 
     /**
@@ -19,23 +29,28 @@ class Controller {
     }
 
     /**
-     * This is just a small test function to see that the controller
-     * could be called. 
+     * Create a person by calling RecruitmentDao and passing the parameter person.
      * 
-     * @returns {String} A dummy message.
+     * @param {PersonDTO} person 
+     * @returns {PersonDTO} The created person
      */
-    testControllerCall() {
-        return 'Should make something meaningful eventually';
+    async createPerson(person) {
+        return this.transactionManager.transaction(async (t) => {
+            return await this.recruitmentDAO.createPerson(person);
+        });
     }
 
     /**
-     * This is by now only returning the username of the user. Eventually
-     * it should add the user to the database using the DAO-object.
-     * @param {User} user The user to add.
-     * @returns Information about the user, bu now only the username.
+     * Finds a person in the database by calling RecruitmentDAO and passing the parameter id
+     * This method is not currently in use.
+     * 
+     * @param {Integer} id 
+     * @returns {PersonDTO} The found person
      */
-    addUser(user) {
-        return user.username;
+    async findPerson(id) {
+        return this.transactionManager.transaction(async (t) => {
+            return await this.recruitmentDAO.findPersonById(id);
+        });
     }
 }
 
