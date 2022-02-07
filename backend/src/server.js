@@ -23,6 +23,7 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 
+app.use(express.json());
 // Will parse incoming request bodies before handlers
 const httpBodyParser = require('body-parser');
 app.use(httpBodyParser.json());

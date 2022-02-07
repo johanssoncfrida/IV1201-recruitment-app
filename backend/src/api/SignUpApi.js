@@ -1,6 +1,7 @@
 'use strict';
 
 const {check, validationResult} = require('express-validator');
+const PersonDTO = require('../model/PersonDTO');
 const RequestHandler = require('./RequestHandler');
 
 /**
@@ -29,9 +30,9 @@ class SignUpApi extends RequestHandler {
             await this.getController();
 
             /**
-             * At this moment this will only take a username as parameter
-             * and just return that username as a JSON, if no username is 
-             * included an error message is sent back
+             * Post request handeling signup.
+             * Response with status 200 returns a PersonDTO object
+             * Error return response status 400
              */
             // name, surname, pnr, email, password, role_id, username
             this.router.post(
@@ -55,33 +56,22 @@ class SignUpApi extends RequestHandler {
                             res.status(400).json({ error: errors.array() });
                             return;
                         }
-                        const user = {
-                            name: req.body.name,
-                            surname: req.body.surname,
-                            pnr: req.body.pnr,
-                            email: req.body.email,
-                            password: req.body.password,
-                            username: req.body.username
-                        }
-                        const result = this.contr.addUser(user);
+                        const person = new PersonDTO(
+                            undefined,
+                            req.body.name,
+                            req.body.surname,
+                            req.body.pnr,
+                            req.body.email,
+                            req.body.password,
+                            undefined,
+                            req.body.username
+                        )
+                        const result = await this.contr.createPerson(person);
                         res.status(200).json({ result: result });
                     } catch (err) {
                         res.status(500).json({ error: 'This did not work' });
                     }
                 })
-
-            /**
-             * Just a test to see if the request handler works, it only answers
-             * with a JSON containing a String.
-             */
-            this.router.get('/', (req, res, next) => {
-                try {
-                    const result = this.contr.testControllerCall();
-                    res.status(200).json({ result: result });
-                } catch (err) {
-                    res.status(500).json({ error: 'This did not work' });
-                }
-            })
         } catch (err) {
             console.log('Error in signup registerhandler: ' + err);
         }
