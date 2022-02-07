@@ -20,6 +20,7 @@ const result = require('dotenv-safe').config({
 const express = require('express');
 const app = express();
 
+app.use(express.json());
 // Will parse incoming request bodies before handlers
 const httpBodyParser = require('body-parser');
 app.use(httpBodyParser.json());
