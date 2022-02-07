@@ -33,11 +33,21 @@ class SignUpApi extends RequestHandler {
              * and just return that username as a JSON, if no username is 
              * included an error message is sent back
              */
+            // name, surname, pnr, email, password, role_id, username
             this.router.post(
                 '/', 
+                check('name')
+                    .notEmpty(),
+                check('surname')
+                    .notEmpty(),
+                check('pnr')
+                    .notEmpty(),
+                check('email')
+                    .notEmpty(),
+                check('password')
+                    .notEmpty(),
                 check('username')
-                    .not()
-                    .isEmpty(),
+                    .notEmpty(),
                 async (req, res, next) => {
                     try {
                         const errors = validationResult(req);
@@ -46,6 +56,11 @@ class SignUpApi extends RequestHandler {
                             return;
                         }
                         const user = {
+                            name: req.body.name,
+                            surname: req.body.surname,
+                            pnr: req.body.pnr,
+                            email: req.body.email,
+                            password: req.body.password,
                             username: req.body.username
                         }
                         const result = this.contr.addUser(user);

@@ -35,7 +35,7 @@ class Controller {
      * @returns Information about the user, bu now only the username.
      */
     addUser(user) {
-        return user.username;
+        return user;
     }
 }
 
