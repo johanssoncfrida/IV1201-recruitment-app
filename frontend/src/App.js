@@ -8,7 +8,6 @@ function App() {
 
   const setInput = (e) => {
     const {name, value} = e.target;
-    //console.log(value);
 
     setPerson(prevState => ({
       ...prevState,
@@ -33,14 +32,14 @@ function App() {
       })
     })
     .then(res => res.json());
-    console.log(newData.result.name);
+
     setReturnedData({
-      name: newData.result.name, 
-      surname: newData.result.name,
-      pnr: newData.result.pnr,
-      email: newData.result.email,
-      password: newData.result.password,
-      username: newData.result.username
+      name: newData.person.name, 
+      surname: newData.person.name,
+      pnr: newData.person.pnr,
+      email: newData.person.email,
+      password: newData.person.password,
+      username: newData.person.username
     });
   }
 
