@@ -2,6 +2,7 @@
 
 const cls = require('cls-hooked');
 const Sequelize = require('sequelize');
+const WError = require('verror').WError;
 const Person = require('../model/Person');
 const PersonDTO = require('../model/PersonDTO');
 
@@ -22,10 +23,8 @@ class RecruitmentDAO {
             process.env.DB_NAME,
             process.env.DB_USER,
             process.env.DB_PASS,
-            {host: process.env.DB_HOST, dialect: process.env.DB_DIALECT},
-            
+            {host: process.env.DB_HOST, dialect: process.env.DB_DIALECT},   
         );
-        console.log("Successfully created db instance and connected to db.");
         Person.createModel(this.database);
     }
 
@@ -45,6 +44,7 @@ class RecruitmentDAO {
      * 
      * @param {Integer} id 
      * @returns {PersonDTO} The found person or null if not found.
+     * @throws Throws an exception if the person could not be found.
      */
     async findPersonById(id) {
         try {
@@ -54,7 +54,16 @@ class RecruitmentDAO {
             }
             return this.createPersonDTO(personModel);
         } catch(err) {
-            console.log("Error in findPersonById");
+            throw new WError(
+                {
+                    cause: err,
+                    info: {
+                        RecruitmentDAO: 'Failed to find person in database.',
+                        id: id,
+                    },
+                },
+                `Could not find person with id ${id}.`,
+            );
         }
     }
 
@@ -64,13 +73,24 @@ class RecruitmentDAO {
      * 
      * @param {PersonDTO} personDTO 
      * @returns {PersonDTO} The created person
+     * @throws Throws an exception if the person could not be created.
      */
     async createPerson(personDTO) {
         try {
             const person = await Person.create(personDTO);
             return this.createPersonDTO(person);
         } catch(err) {
-            console.log("Error in createPerson");
+            throw new WError(
+                {
+                    cause: err,
+                    info: {
+                        RecruitmentDAO: 'Failed to create person in database.',
+                        name: personDTO.name,
+                        surname: personDTO.surname,
+                    },
+                },
+                `Could not create person ${personDTO.name} ${personDTO.surname}.`,
+            );
         }
     }
 
