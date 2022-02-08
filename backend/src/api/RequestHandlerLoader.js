@@ -1,6 +1,7 @@
 'use strict'
 
 const SignUpApi = require('./SignUpApi');
+const ErrorHandler = require('./error/ErrorHandler');
 
 /**
  * This class contains all request handlers and support
@@ -13,10 +14,11 @@ class RequestHandlerLoader {
      */
     constructor() {
         this.requestHandlers = [];
+        this.errorHandlers = [];
     }
 
     /**
-     * Will add a new requesthandler to the list.
+     * Will add a new request handler to the list.
      * @param {RequestHandler} requestHandler The handler that shall be added
      */
     addRequestHandler(requestHandler) {
@@ -24,13 +26,31 @@ class RequestHandlerLoader {
     }
 
     /**
-     * 
+     * Will add a new error handler to the list.
+     * @param {ErrorHandler} errorHandler 
+     */
+    addErrorHandler(errorHandler) {
+        this.errorHandlers.push(errorHandler);
+    }
+
+    /**
+     * Will load the request handlers.
      * @param {Application} app The express app that will hold all handlers.
      */
     loadRequestHandlers(app) {
         this.requestHandlers.forEach((requestHandler) => {
             requestHandler.registerHandler();
             app.use(requestHandler.path, requestHandler.router);
+        })
+    }
+
+    /**
+     * Will load the error handlers.
+     * @param {Application} app The express app that will hold the error handlers.
+     */
+    loadErrorHandlers(app) {
+        this.errorHandlers.forEach((errorHandler) => {
+            errorHandler.registerHandler(app);
         })
     }
 }
@@ -40,4 +60,5 @@ class RequestHandlerLoader {
  */
 const loader = new RequestHandlerLoader();
 loader.addRequestHandler(new SignUpApi());
+loader.addErrorHandler(new ErrorHandler());
 module.exports = loader;

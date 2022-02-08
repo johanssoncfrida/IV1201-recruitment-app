@@ -5,7 +5,6 @@
  * and the server is setup.
  */
 
-
 const path = require('path');
 // __dirname is the absolute path to the directory of this file
 // using path.join(__dirname, '..') will jump out from the src folder
@@ -38,6 +37,7 @@ app.get('/', (req, res) => {
 
 const reqHandlerLoader = require('./api/RequestHandlerLoader');
 reqHandlerLoader.loadRequestHandlers(app);
+reqHandlerLoader.loadErrorHandlers(app);
 
 const server = app.listen(
     process.env.SERVER_PORT,

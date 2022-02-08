@@ -32,34 +32,70 @@ class SignUpApi extends RequestHandler {
             await this.getController();
 
             /**
-             * Post request handeling signup.
+             * Post request handling signup.
              * Response with status 200 returns a PersonDTO object
-             * Error return response status 400
+             * Error return response status 400 if parameters are wrongly
+             * formatted, an error message is included.
              */
             // name, surname, pnr, email, password, role_id, username
             this.router.post(
                 '/', 
-                check('name')
-                    .notEmpty(),
-                check('surname')
-                    .notEmpty(),
-                check('pnr')
-                    .notEmpty(),
-                check('email')
-                    .notEmpty(),
-                check('password')
-                    .notEmpty(),
-                check('username')
-                    .notEmpty(),
+                check('name', 'Fill in the name field using letters.')
+                    .notEmpty()
+                    .isAlpha()
+                    .withMessage('The name should only consist of letters.')
+                    .isLength({min: 2, max: 30 })
+                    .withMessage('The name should be between 2 and 30 letters.')
+                    .stripLow(true)
+                    .escape(),
+                check('surname', 'Fill in the surname field using letters.')
+                    .notEmpty()
+                    .isAlpha()
+                    .withMessage('The surname should only consist of letters.')
+                    .isLength({min: 2, max: 30 })
+                    .withMessage('The surname should be between 2 and 30 letters.')
+                    .stripLow(true)
+                    .escape(),
+                check('pnr', 'Fill in the personal number field.')
+                    .notEmpty()
+                    .isNumeric()
+                    .withMessage('The personal number should consist of numbers.')
+                    .isLength({min: 10, max: 10})
+                    .withMessage('The personal number should be given as 10 numbers.')
+                    .stripLow(true)
+                    .escape(),
+                check('email', 'The email should have the format example@something.com')
+                    .notEmpty()
+                    .isEmail()
+                    .isLength({min: 5, max: 50})
+                    .withMessage('The email should be min 5 and max 50 characters.')
+                    .stripLow(true)
+                    .escape(),
+                check('password', 'Fill in the password field.')
+                    .notEmpty()
+                    .isLength({ min: 5 })
+                    .withMessage('The password must be at least 5 characters.')
+                    .matches(/\d/)
+                    .withMessage('The password must contain at least one number.')
+                    .stripLow(true)
+                    .escape(),
+                check('username', 'Fill in the username field.')
+                    .notEmpty()
+                    .isAlphanumeric()
+                    .withMessage('The username should be letters and/or numbers.')
+                    .isLength({min: 5, max: 30})
+                    .withMessage('The username should be between 5 and 30 characters.')
+                    .stripLow(true)
+                    .escape(),
                 async (req, res, next) => {
                     try {
                         const errors = validationResult(req);
                         if(!errors.isEmpty()) {
-                            res.status(400).json({ error: errors.array() });
+                            console.log(errors.array());
+                            res.status(400).json({ error: errors.array()[0].msg });
                             return;
                         }
                         const hashedPassword = await bcrypt.hash(req.body.password, saltRounds);
-                        console.log("Hashed password: " + hashedPassword);
                         const person = new PersonDTO(
                             undefined,
                             req.body.name,
@@ -73,7 +109,7 @@ class SignUpApi extends RequestHandler {
                         const result = await this.contr.createPerson(person);
                         res.status(200).json({ person: result });
                     } catch (err) {
-                        res.status(500).json({ error: 'This did not work' });
+                        next(err);
                     }
                 })
         } catch (err) {
