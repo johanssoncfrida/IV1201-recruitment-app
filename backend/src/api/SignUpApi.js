@@ -91,7 +91,6 @@ class SignUpApi extends RequestHandler {
                     try {
                         const errors = validationResult(req);
                         if(!errors.isEmpty()) {
-                            console.log(errors.array());
                             res.status(400).json({ error: errors.array()[0].msg });
                             return;
                         }
@@ -107,7 +106,8 @@ class SignUpApi extends RequestHandler {
                             req.body.username
                         )
                         const result = await this.contr.createPerson(person);
-                        res.status(200).json({ person: result });
+                        console.log(result);
+                        res.status(200).json({ result: 'Sucessfull signup' });
                     } catch (err) {
                         next(err);
                     }

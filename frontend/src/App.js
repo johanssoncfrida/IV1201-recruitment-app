@@ -1,11 +1,13 @@
 import './App.css';
 import React, {useState} from 'react';
 
+/**
+ * This is the basic frontend to sign up a user. 
+ */
 function App() {
 
-  const [returnedData, setReturnedData] = useState({});
+  const [returnedData, setReturnedData] = useState();
   const [person, setPerson] = useState({name: '', surname: '', pnr: '', email: '', password: '', username: ''});
-  const [error, setError] = useState('');
 
   const setInput = (e) => {
     const {name, value} = e.target;
@@ -16,6 +18,10 @@ function App() {
     }));
   }
 
+  /**
+   * Creates a POST-request with the data filled in by the user in the client. 
+   * Receives the response from the server and sets the state variable "returnedData".
+   */
   const getData = async () => {
     const newData = await fetch('/signup/', {
       method: 'POST',
@@ -34,23 +40,12 @@ function App() {
     })
     .then(res => res.json());
 
-    console.log(newData);
-    console.log(newData.error);
-
     if(newData.error) {
-      setError(newData.error);
+      setReturnedData(newData.error);
     }
     
-    if(newData.person) {
-      setError("");
-      setReturnedData({
-        name: newData.person.name, 
-        surname: newData.person.name,
-        pnr: newData.person.pnr,
-        email: newData.person.email,
-        password: newData.person.password,
-        username: newData.person.username
-      });
+    if(newData.result) {
+      setReturnedData(newData.result);
     }
   }
 
@@ -63,13 +58,8 @@ function App() {
       <input type="password" name="password" placeholder="Password" onChange={setInput}></input>
       <input type="text" name="username" placeholder="Username" onChange={setInput}></input>
       <button onClick={() => getData()}>Sign up</button>
-      <p>{error}</p>
-      <p>Firstname: {returnedData.name}</p>
-      <p>Surname: {returnedData.surname}</p>
-      <p>SSN: {returnedData.pnr}</p>
-      <p>Email: {returnedData.email}</p>
-      <p>Password: {returnedData.password}</p>
-      <p>Username: {returnedData.username}</p>
+
+      <p>{returnedData}</p>
 
     </div>
   );
