@@ -41,15 +41,21 @@ class Controller {
     }
 
     /**
-     * Finds a person in the database by calling RecruitmentDAO and passing the parameter id
+     * Finds a person in the database by calling RecruitmentDAO and passing the parameter username.
+     * If a person is found the method returns true, otherwise false
      * This method is not currently in use.
      * 
-     * @param {Integer} id 
-     * @returns {PersonDTO} The found person
+     * @param {String} username
+     * @returns {Boolean} True if username is available or False if username is not available
      */
-    async findPerson(id) {
+    async isUsernameAvailable(username) {
         return this.transactionManager.transaction(async (t) => {
-            return await this.recruitmentDAO.findPersonById(id);
+            const person = await this.recruitmentDAO.findPersonByUsername(username);
+            if(person) {
+                return false;
+            } else {
+                return true;
+            }
         });
     }
 }
