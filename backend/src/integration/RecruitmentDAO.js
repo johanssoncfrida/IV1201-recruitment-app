@@ -38,17 +38,19 @@ class RecruitmentDAO {
     }
 
     /**
-     * Finds a person in the database by calling Sequelize's method findByPk()
-     * and passing the parameter id.
+     * Finds a person in the database by calling Sequelize's method findAll()
+     * and passing the parameter username.
      * This method is not currently in use.
      * 
-     * @param {Integer} id 
+     * @param {String} username
      * @returns {PersonDTO} The found person or null if not found.
      * @throws Throws an exception if the person could not be found.
      */
-    async findPersonById(id) {
+    async findPersonByUsername(username) {
         try {
-            const personModel = await Person.findByPk(id);
+            const personModel = await Person.findAll({
+                where: {username: username},
+            }); 
             if (personModel === null) {
                 return null;
             }
@@ -59,10 +61,10 @@ class RecruitmentDAO {
                     cause: err,
                     info: {
                         RecruitmentDAO: 'Failed to find person in database.',
-                        id: id,
+                        username: username,
                     },
                 },
-                `Could not find person with id ${id}.`,
+                `Could not find person with username ${username}.`,
             );
         }
     }

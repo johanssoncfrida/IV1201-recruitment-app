@@ -4,7 +4,7 @@ const SignUpApi = require('./SignUpApi');
 const ErrorHandler = require('./error/ErrorHandler');
 
 /**
- * This class contains all request handlers and support
+ * This class contains all request handlers and error handlers and support
  * for loading them.
  */
 class RequestHandlerLoader {

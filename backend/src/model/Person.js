@@ -54,8 +54,8 @@ class Person extends Model {
             modelName: Person.PERSON_MODEL_NAME, 
             paranoid: false, 
             freezeTableName: true, 
-            timestamps: false}
-        );
+            timestamps: false
+        });
         return Person;
     }
 }

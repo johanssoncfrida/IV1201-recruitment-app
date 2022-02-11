@@ -16,6 +16,7 @@ class RequestHandler {
 
     /** 
      * The URL prefix.
+     * Not currently in use. This will be needed later when linking resources.
      */
     static get URL_PREFIX() {
         return 'http://';

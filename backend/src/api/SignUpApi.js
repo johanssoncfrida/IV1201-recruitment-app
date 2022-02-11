@@ -33,11 +33,10 @@ class SignUpApi extends RequestHandler {
 
             /**
              * Post request handling signup.
-             * Response with status 200 returns a PersonDTO object
+             * Response with status 200 returns success message
              * Error return response status 400 if parameters are wrongly
              * formatted, an error message is included.
              */
-            // name, surname, pnr, email, password, role_id, username
             this.router.post(
                 '/', 
                 check('name', 'Fill in the name field using letters.')
@@ -104,14 +103,14 @@ class SignUpApi extends RequestHandler {
                             hashedPassword,
                             undefined,
                             req.body.username
-                        )
+                        );
                         const result = await this.contr.createPerson(person);
                         console.log(result);
-                        res.status(200).json({ result: 'Sucessfull signup' });
+                        res.status(200).json({ result: 'Successfull signup' });
                     } catch (err) {
                         next(err);
                     }
-                })
+                });
         } catch (err) {
             console.log('Error in signup registerhandler: ' + err);
         }
