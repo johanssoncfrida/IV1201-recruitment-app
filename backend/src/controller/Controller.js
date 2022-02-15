@@ -1,7 +1,7 @@
 'use strict';
 
 const RecruitmentDAO = require('../integration/RecruitmentDAO');
-const PersonDTO = require('../model/PersonDTO');
+//const PersonDTO = require('../model/PersonDTO');
 
 /**
  * Controller class. This class is responsible of calling 

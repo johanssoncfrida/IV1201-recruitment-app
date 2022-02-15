@@ -2,7 +2,7 @@
 import { configureStore } from '@reduxjs/toolkit';
 
 //import reducer function and add to store
-import personReducer from '../reducer/personSlice';
+import authReducer from './reducers/authReducer';
 
 //Redux Store
 export default configureStore({
@@ -23,6 +23,6 @@ export default configureStore({
      * }
      */
     reducer: {
-        person: personReducer
+        person: authReducer
     },
 });
