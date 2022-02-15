@@ -21,5 +21,8 @@
     "pg-promise": "^10.11.1",
     "sequelize": "^6.15.1",
     "verror": "^1.10.1"
+  },
+  "devDependencies": {
+    "eslint": "^8.9.0"
   }
 }
