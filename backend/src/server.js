@@ -33,6 +33,21 @@ app.get('/', (req, res) => {
     return res.send('Welcome to the recruitment app!');
 });
 
+app.post('/signin/', (req, res) => {
+    let role = req.body.username.startsWith("r") ? "recruiter" : "applicant";
+
+    if(req.body.username.includes("x")) {
+        res.status(400).json({ error: "Invalid value in username" });
+    } else {
+        res.status(200).json({ 
+            result: 'Sign in success',
+            role: role,
+            username: req.body.username,
+            password: req.body.password,
+        });
+    }
+});
+
 const reqHandlerLoader = require('./api/RequestHandlerLoader');
 reqHandlerLoader.loadRequestHandlers(app);
 reqHandlerLoader.loadErrorHandlers(app);
