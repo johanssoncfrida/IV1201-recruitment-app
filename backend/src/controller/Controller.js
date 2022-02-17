@@ -35,27 +35,25 @@ class Controller {
      * @returns {PersonDTO} The created person
      */
     async createPerson(person) {
-        return this.transactionManager.transaction(async (t) => {
+        return this.transactionManager.transaction(async () => {
             return await this.recruitmentDAO.createPerson(person);
         });
     }
 
     /**
-     * Finds a person in the database by calling RecruitmentDAO and passing the parameter username.
-     * If a person is found the method returns true, otherwise false
-     * This method is not currently in use.
+     * Checks if a username is available in the database.
      * 
      * @param {String} username
      * @returns {Boolean} True if username is available or False if username is not available
      */
     async isUsernameAvailable(username) {
-        return this.transactionManager.transaction(async (t) => {
+        return this.transactionManager.transaction(async () => {
             const person = await this.recruitmentDAO.findPersonByUsername(username);
             if(person) {
                 return false;
-            } else {
-                return true;
             }
+            return true;
+            
         });
     }
 }
