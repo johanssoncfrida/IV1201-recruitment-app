@@ -93,6 +93,12 @@ class SignUpApi extends RequestHandler {
                             res.status(400).json({ error: errors.array()[0].msg });
                             return;
                         }
+                        const availableUsername = await this.contr.isUsernameAvailable(req.body.username);
+                        if(!availableUsername){
+                            return res.status(409).json({ error: "Username already in use" });
+                        }
+
+
                         const hashedPassword = await bcrypt.hash(req.body.password, saltRounds);
                         const person = new PersonDTO(
                             undefined,

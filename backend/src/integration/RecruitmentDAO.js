@@ -38,9 +38,8 @@ class RecruitmentDAO {
     }
 
     /**
-     * Finds a person in the database by calling Sequelize's method findAll()
-     * and passing the parameter username.
-     * This method is not currently in use.
+     * Finds a person in the database by calling Sequelize's method findOne()
+     * while passing the parameter username.
      * 
      * @param {String} username
      * @returns {PersonDTO} The found person or null if not found.
@@ -48,13 +47,13 @@ class RecruitmentDAO {
      */
     async findPersonByUsername(username) {
         try {
-            const personModel = await Person.findAll({
+            const person = await Person.findOne({
                 where: {username: username},
             }); 
-            if (personModel === null) {
-                return null;
+            if(person) {
+                return this.createPersonDTO(person);
             }
-            return this.createPersonDTO(personModel);
+            return null;
         } catch(err) {
             throw new WError(
                 {
@@ -64,7 +63,7 @@ class RecruitmentDAO {
                         username: username,
                     },
                 },
-                `Could not find person with username ${username}.`,
+                'Could not find person with username ${username}.',
             );
         }
     }
@@ -91,7 +90,7 @@ class RecruitmentDAO {
                         surname: personDTO.surname,
                     },
                 },
-                `Could not create person ${personDTO.name} ${personDTO.surname}.`,
+                'Could not create person ${personDTO.name} ${personDTO.surname}.',
             );
         }
     }
