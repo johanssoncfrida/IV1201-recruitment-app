@@ -1,7 +1,8 @@
-import {useState} from 'react';
+import {useEffect, useState} from 'react';
 import SignUpView from '../views/SignUpView';
 import { useSelector, useDispatch } from 'react-redux';
-import { setCurrentPerson, selectPerson } from '../store/reducers/authReducer'
+import { setCurrentPerson } from '../store/actions/Actions';
+
 /**
  * This is the basic frontend to sign up a user. 
  */
@@ -12,22 +13,20 @@ function SignUp() {
 
     const setInput = (e) => {
         const {name, value} = e.target;
-
         setPerson(prevState => ({
         ...prevState,
         [name]: value
         }));
     }
     /**
-   * When an action is dispatched, useSelector() will do a reference comparison of the 
-   * previous selector result value and the current result value. If they are different,
-   * the component will be forced to re-render. If they are the same, the component will 
-   * not re-render.
+   * useSelector() will look in the index.js file after Provider.
+   * Provider will provide useSelector with the store state which
+   * is the state parameter. reduxPerson is an object with 
+   * the store state's parameters.
    * 
-   * useDispatch() gives you the ability to trigger actions from directly within the components/classes..
-   * dispatch can be used multiple timed to wrap any functions that dispatch actions to the store.
+   * useDispatch() will dispatch actions to the reducer.
    */
-  const reduxPerson = useSelector(selectPerson);
+  const reduxPerson = useSelector(state => state.auth.person);
   const dispatch = useDispatch();
 
     /**
@@ -57,12 +56,22 @@ function SignUp() {
         }
         
         if(newData.result) {
-            dispatch(setCurrentPerson({person}));
             setReturnedData(newData.result);
         }
-        console.log(reduxPerson);
     }
 
+    /**
+     * This is needed to always get the newest redux state 
+     * rendered when signing up a new person. UseEffect runs both after the first render
+     * and after every update.
+     * The second parameter is to prevent useEffect to run continuously on every render,
+     * it will only run when this component state has changed/differs from redux state.
+     */
+    useEffect(() => {
+        dispatch(setCurrentPerson(person));
+    }, [dispatch, person]);
+
+    console.log(reduxPerson); //helper, to see redux state
     return SignUpView({
         setInput: setInput, 
         getData: getData, 
