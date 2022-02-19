@@ -60,8 +60,8 @@ function SignIn() {
             },
             body: JSON.stringify(credentials)
         }).then(res => {
-            statusText = res.statusText;
             status = res.status;
+            statusText = res.statusText;
             return res.json();
         }).then(data => {
             return { status, data };
