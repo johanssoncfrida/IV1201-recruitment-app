@@ -33,6 +33,36 @@ app.get('/', (req, res) => {
     return res.send('Welcome to the recruitment app!');
 });
 
+// ----------------------------------------------------------------------------
+// ----------------------------------------------------------------------------
+// ----------------------------------------------------------------------------
+// This is only a dummy request handler to test the initial frontend's requests.
+// Should not be a part of the application when signin API has been included!!!
+//
+// If you send an 'r' as the first letter in the request you'll be treated as a
+// recruiter and that role will be sent. If your username contains an 'x' an error
+// will be sent. This was just to check the behaviour of the frontend on an error.
+//
+// The response might contain other fields than username and password, maybe the 
+// whole user. The 'result', 'role' and 'error' fields are expected in the frontend.
+app.post('/signin/', (req, res) => {
+    let role = req.body.username.startsWith("r") ? "recruiter" : "applicant";
+
+    if(req.body.username.includes("x")) {
+        res.status(400).json({ error: "Invalid value in username" });
+    } else {
+        res.status(200).json({ 
+            result: 'Sign in success',
+            role: role,
+            username: req.body.username,
+            password: req.body.password,
+        });
+    }
+});
+// ----------------------------------------------------------------------------
+// ----------------------------------------------------------------------------
+// ----------------------------------------------------------------------------
+
 const reqHandlerLoader = require('./api/RequestHandlerLoader');
 reqHandlerLoader.loadRequestHandlers(app);
 reqHandlerLoader.loadErrorHandlers(app);
