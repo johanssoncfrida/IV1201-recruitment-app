@@ -3,8 +3,6 @@
 const {check, validationResult} = require('express-validator');
 const PersonDTO = require('../model/PersonDTO');
 const RequestHandler = require('./RequestHandler');
-const bcrypt = require('bcrypt');
-const saltRounds = parseInt(process.env.SALT_ROUNDS);
 
 /**
  * This is the REST API for signing up a user.
@@ -98,15 +96,13 @@ class SignUpApi extends RequestHandler {
                             return res.status(409).json({ error: "Username already in use" });
                         }
 
-
-                        const hashedPassword = await bcrypt.hash(req.body.password, saltRounds);
                         const person = new PersonDTO(
                             undefined,
                             req.body.name,
                             req.body.surname,
                             req.body.pnr,
                             req.body.email,
-                            hashedPassword,
+                            req.body.password,
                             undefined,
                             req.body.username
                         );

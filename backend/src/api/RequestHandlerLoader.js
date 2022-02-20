@@ -1,6 +1,7 @@
 'use strict'
 
 const SignUpApi = require('./SignUpApi');
+const SignInApi = require('./SignInApi');
 const ErrorHandler = require('./error/ErrorHandler');
 
 /**
@@ -60,5 +61,6 @@ class RequestHandlerLoader {
  */
 const loader = new RequestHandlerLoader();
 loader.addRequestHandler(new SignUpApi());
+loader.addRequestHandler(new SignInApi());
 loader.addErrorHandler(new ErrorHandler());
 module.exports = loader;

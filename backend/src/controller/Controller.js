@@ -1,7 +1,8 @@
 'use strict';
 
 const RecruitmentDAO = require('../integration/RecruitmentDAO');
-//const PersonDTO = require('../model/PersonDTO');
+const bcrypt = require('bcrypt');
+const saltRounds = parseInt(process.env.SALT_ROUNDS);
 
 /**
  * Controller class. This class is responsible of calling 
@@ -29,14 +30,17 @@ class Controller {
     }
 
     /**
-     * Create a person by calling RecruitmentDao and passing the parameter person.
+     * Create a person by calling RecruitmentDao and passing the parameter person
+     * with its hashed password.
      * 
      * @param {PersonDTO} person 
      * @returns {PersonDTO} The created person
      */
     async createPerson(person) {
-        return this.transactionManager.transaction(async () => {
-            return await this.recruitmentDAO.createPerson(person);
+        return this.transactionManager.transaction(async (t) => {
+            const hashedPassword = await bcrypt.hash(person.password, saltRounds);
+            const p = {...person, password: hashedPassword};
+            return await this.recruitmentDAO.createPerson(p);
         });
     }
 
@@ -53,7 +57,33 @@ class Controller {
                 return false;
             }
             return true;
-            
+        });
+    }
+
+    /**
+     * Checks if the given username exists in the database. If the username exists
+     * checks that the given password matches the password for this person in the db.
+     * 
+     * @param {String} username: The username entered when signing in.
+     * @param {String} password: The password entered when signing in.
+     * @returns {personDTO} The signed in person if sign in is successful, or
+     * null if the username or the password is wrong (failed sign in).
+     */
+    async signin(username, password) {
+        return this.transactionManager.transaction(async (t) => {
+            const person = await this.recruitmentDAO.findPersonByUsername(username);
+
+            if(person) {
+                const correctPassword = await bcrypt.compare(password, person.password).then(function(result) {
+                    return result;
+                });
+                
+                if(correctPassword) {
+                    return person;
+                }
+            } else {
+                return null;
+            }
         });
     }
 }
