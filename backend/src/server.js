@@ -45,7 +45,7 @@ app.get('/', (req, res) => {
 //
 // The response might contain other fields than username and password, maybe the 
 // whole user. The 'result', 'role' and 'error' fields are expected in the frontend.
-app.post('/signin/', (req, res) => {
+/*app.post('/signin/', (req, res) => {
     let role = req.body.username.startsWith("r") ? "recruiter" : "applicant";
 
     if(req.body.username.includes("x")) {
@@ -58,7 +58,7 @@ app.post('/signin/', (req, res) => {
             password: req.body.password,
         });
     }
-});
+});*/
 // ----------------------------------------------------------------------------
 // ----------------------------------------------------------------------------
 // ----------------------------------------------------------------------------

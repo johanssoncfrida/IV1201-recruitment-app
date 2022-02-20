@@ -51,7 +51,7 @@ class RecruitmentDAO {
                 where: {username: username},
             }); 
             if(person) {
-                return this.createPersonDTO(person);
+                return this.createPersonDTO(person, person.role_id);
             }
             return null;
         } catch(err) {
@@ -79,7 +79,7 @@ class RecruitmentDAO {
     async createPerson(personDTO) {
         try {
             const person = await Person.create(personDTO);
-            return this.createPersonDTO(person);
+            return this.createPersonDTO(person, 2);
         } catch(err) {
             throw new WError(
                 {
@@ -98,10 +98,11 @@ class RecruitmentDAO {
     /**
      * Creates a PersonDTO
      * 
-     * @param {Person} personModel 
-     * @returns {PersonDTO} The created person
+     * @param {Person} personModel: The person to be created.  
+     * @param {int} roleId: The role id for the personDTO to be created.
+     * @returns {PersonDTO} The created person.
      */
-    createPersonDTO(personModel) {
+    createPersonDTO(personModel, roleId) {
         return new PersonDTO(
             personModel.person_id,
             personModel.name,
@@ -109,7 +110,7 @@ class RecruitmentDAO {
             personModel.pnr,
             personModel.email,
             personModel.password,
-            personModel.roleId,
+            roleId,
             personModel.username,
         );
     }
