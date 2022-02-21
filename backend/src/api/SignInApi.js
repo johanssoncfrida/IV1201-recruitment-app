@@ -1,6 +1,7 @@
 'use strict';
 
 const {check, validationResult} = require('express-validator');
+const Authorization = require('./auth/Authorization');
 const RequestHandler = require('./RequestHandler');
 
 /**
@@ -56,10 +57,12 @@ class SignInApi extends RequestHandler {
                             return;
                         }
 
-                        const person = await this.contr.signin(req.body.username, req.body.password);
+                        const signedInPerson = await this.contr.signin(req.body.username, req.body.password);
                         
-                        if(person) {
-                            const role = (person.role_id === 1) ? "recruiter" : "applicant";
+                        if(signedInPerson) {
+                            const role = (signedInPerson.role_id === 1) ? "recruiter" : "applicant";
+                            Authorization.setAuthCookie(signedInPerson, res);
+                            console.log(res);
                             res.status(200).json({ 
                                 result: 'Successfull sign in', 
                                 role: role
