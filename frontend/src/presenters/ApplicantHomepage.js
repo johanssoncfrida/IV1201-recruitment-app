@@ -1,5 +1,6 @@
 import ApplicantHomepageView from "../views/ApplicantHomepageView";
 import { useState} from 'react';
+import { useNavigate } from "react-router-dom";
 
 /**
  * This is a React function component responsible for the frontend logic
@@ -9,17 +10,31 @@ import { useState} from 'react';
  */
 function ApplicantHomepage() {
     const [result, setResult] = useState("");
+    const navigate = useNavigate();
 
+    /**
+     * Helper function to verify that JWT is working.
+     * This method might change futher on.
+     * 
+     * @param {Event} e The event from click on button
+     */
     const handleClick = (e) => {
         e.preventDefault();
 
         performAuth().then(res => {
             console.log(res.data);
             console.log(res.status);
-            if(res.status === 200) {
-                setResult(res.data.result);
-            } else {
-                setResult(res.data.error);
+            switch(res.status){
+                case 200:   
+                    setResult(res.data.result);
+                    break;
+                case 401:   
+                    window.alert('Unauthorized. You will be redirected to signin');
+                    navigate('/');
+                    break;
+                default:    
+                    setResult(res.data.error);
+                    break;
             }
         });
     }

@@ -4,6 +4,7 @@ const SignUpApi = require('./SignUpApi');
 const SignInApi = require('./SignInApi');
 const ApplicantApi = require('./ApplicantApi');
 const ErrorHandler = require('./error/ErrorHandler');
+const RecruiterApi = require('./RecruiterApi');
 
 /**
  * This class contains all request handlers and error handlers and support
@@ -64,5 +65,6 @@ const loader = new RequestHandlerLoader();
 loader.addRequestHandler(new SignUpApi());
 loader.addRequestHandler(new SignInApi());
 loader.addRequestHandler(new ApplicantApi());
+loader.addRequestHandler(new RecruiterApi());
 loader.addErrorHandler(new ErrorHandler());
 module.exports = loader;
