@@ -4,7 +4,7 @@
  * This is the main entry point of the server, where exress is started
  * and the server is setup.
  */
-
+const cors = require('cors');
 const path = require('path');
 // __dirname is the absolute path to the directory of this file
 // using path.join(__dirname, '..') will jump out from the src folder
@@ -20,7 +20,7 @@ const express = require('express');
 const app = express();
 app.use(express.json());
 
-app.use(express.json());
+app.use(cors());
 // Will parse incoming request bodies before handlers
 const httpBodyParser = require('body-parser');
 app.use(httpBodyParser.json());
