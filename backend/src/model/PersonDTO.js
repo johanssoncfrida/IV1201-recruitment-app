@@ -18,7 +18,7 @@ class PersonDTO {
      * @param {String} roleId The role of the person
      * @param {String} username the username of the person
      */
-    constructor(personId, name, surname, pnr, email, password, roleId, username) {
+    constructor(personId, name, surname, pnr, email, password, roleId = 2, username) {
         this.personId = personId;
         this.name = name;
         this.surname = surname;

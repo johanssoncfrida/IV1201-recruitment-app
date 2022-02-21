@@ -74,9 +74,14 @@ class Controller {
             const person = await this.recruitmentDAO.findPersonByUsername(username);
 
             if(person) {
-                const correctPassword = await bcrypt.compare(password, person.password).then(function(result) {
-                    return result;
-                });
+                let correctPassword;
+                if(person.role_id === 1) {
+                    correctPassword = password === person.password ? true : false;
+                } else {
+                    correctPassword = await bcrypt.compare(password, person.password).then(function(result) {
+                        return result;
+                    });
+                }
                 
                 if(correctPassword) {
                     return person;
