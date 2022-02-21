@@ -27,6 +27,36 @@ class Authorization {
 
         res.cookie('personAuth', jwtToken, cookieOptions);
     }
+
+    static async isSignedIn(contr, req, res) {
+        const authCookie = req.cookies.personAuth;
+        if(!authCookie) {
+            res.status(401).json({
+                error: 'Unauthorized. No auth token'
+            });
+            return false;
+        }
+        try {
+            const JWTPayload = jwt.verify(authCookie, process.env.JWT_SECRET);
+            console.log(JWTPayload);
+            const personDoesNotExist = await contr.isUsernameAvailable(JWTPayload.username);
+            if(personDoesNotExist) {
+                res.clearCookie('personAuth');
+                res.status(401).json({
+                    error: 'Unauthorized. Invalid auth token'
+                });
+                return false;
+            }
+            return true;
+        } catch (err) {
+            res.clearCookie('personAuth');
+            res.status(401).json({
+                error: 'Unauthorized. Invalid auth token'
+            });
+            return false;
+        }
+    }
+
 }
 
 module.exports = Authorization;

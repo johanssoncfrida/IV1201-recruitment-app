@@ -2,6 +2,7 @@
 
 const SignUpApi = require('./SignUpApi');
 const SignInApi = require('./SignInApi');
+const ApplicantApi = require('./ApplicantApi');
 const ErrorHandler = require('./error/ErrorHandler');
 
 /**
@@ -62,5 +63,6 @@ class RequestHandlerLoader {
 const loader = new RequestHandlerLoader();
 loader.addRequestHandler(new SignUpApi());
 loader.addRequestHandler(new SignInApi());
+loader.addRequestHandler(new ApplicantApi());
 loader.addErrorHandler(new ErrorHandler());
 module.exports = loader;
