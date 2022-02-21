@@ -11,10 +11,10 @@ const path = require('path');
 const BACKEND_ROOT_DIR = path.join(__dirname, '..');
 
 // Config to specify a custom path to .env
-const result = require('dotenv-safe').config({
-    path: path.join(BACKEND_ROOT_DIR, '.env'),
-    example: path.join(BACKEND_ROOT_DIR, '.env.example')
-});
+//const result = require('dotenv-safe').config({
+//    path: path.join(BACKEND_ROOT_DIR, '.env'),
+//    example: path.join(BACKEND_ROOT_DIR, '.env.example')
+//});
 
 const express = require('express');
 const app = express();
@@ -38,9 +38,8 @@ reqHandlerLoader.loadRequestHandlers(app);
 reqHandlerLoader.loadErrorHandlers(app);
 
 const server = app.listen(
-    process.env.SERVER_PORT,
-    process.env.SERVER_HOST,
+    process.env.PORT,
     () => {
-        console.log('Server up at ' + server.address().address + ':' + server.address().port);
+        console.log('Server up ');
     }
 );
