@@ -33,9 +33,10 @@ class SignInApi extends RequestHandler {
              * Post request handling sign in.
              * Response with status 200: returns success message and the users role id
              *               status 400: if the any parameters are missing,
-             *                           returns an error message
+             *                           returns an error message.
              *               status 403: if the username or password is wrong,
-             *                           returns an error message 
+             *                           returns an error message.
+             *               status 500: if an internal server error occurs.
              */
             this.router.post(
                 '/', 

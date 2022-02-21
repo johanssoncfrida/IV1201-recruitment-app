@@ -4,9 +4,9 @@ const Authorization = require('./auth/Authorization');
 const RequestHandler = require('./RequestHandler');
 
 /**
- * This is the REST API for the applicant.
+ * This is the REST API for the recruiter.
  */
-class ApplicantApi extends RequestHandler {
+class RecruiterApi extends RequestHandler {
 
     /**
      * Creates a new instance of the class.
@@ -19,7 +19,7 @@ class ApplicantApi extends RequestHandler {
      * @return {String} the URL path this will handle.
      */
     get path() {
-        return '/applicant';
+        return '/recruiter';
     }
 
     /**
@@ -36,7 +36,7 @@ class ApplicantApi extends RequestHandler {
              *               status 500: if an internal server error occurs.
              */
             this.router.get(
-                '/apply', 
+                '/', 
                 async (req, res, next) => {
                     try {
                         if( !(await Authorization.isSignedIn(this.contr, req, res)) ) {
@@ -51,9 +51,9 @@ class ApplicantApi extends RequestHandler {
                     }
                 });
         } catch (err) {
-            console.log('Error in applicant registerhandler: ' + err);
+            console.log('Error in recruiter registerhandler: ' + err);
         }
     }
 }
 
-module.exports = ApplicantApi;
+module.exports = RecruiterApi;

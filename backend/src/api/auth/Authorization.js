@@ -2,12 +2,22 @@
 
 const jwt = require('jsonwebtoken');
 
+/**
+ * This class contains methods for JSON Web Token authorization
+ * 
+ */
 class Authorization {
 
+    /**
+     * Returns the name of the cookie
+     */
     static get AUTH_COOKIE_NAME() {
         return 'personAuth';
     }
 
+    /**
+     * Sets the JSON Web Token as a cookie and its options.
+     */
     static setAuthCookie(person, res) {
         const onlyAccessibleFromHttp = {httpOnly: true};
         const isSessionCookie = {expires: 0};
@@ -19,15 +29,22 @@ class Authorization {
                 expiresIn: '30 minutes',
             },
         );
-
         const cookieOptions = {
             ...onlyAccessibleFromHttp,
             ...isSessionCookie,
         };
-
-        res.cookie('personAuth', jwtToken, cookieOptions);
+        res.cookie(this.AUTH_COOKIE_NAME, jwtToken, cookieOptions);
     }
 
+    /**
+     * Verifies if a person is signed in by checking the auth cookie.
+     * Sets and sends the error message of the response if not signed in.
+     * 
+     * @param {Controller} contr The controller of the application.
+     * @param {Request} req The Express Request Object.
+     * @param {Response} res The Express Response Object.
+     * @returns {Boolean} True if person is logged in and false if not logged in.
+     */
     static async isSignedIn(contr, req, res) {
         const authCookie = req.cookies.personAuth;
         if(!authCookie) {
@@ -38,10 +55,9 @@ class Authorization {
         }
         try {
             const JWTPayload = jwt.verify(authCookie, process.env.JWT_SECRET);
-            console.log(JWTPayload);
             const personDoesNotExist = await contr.isUsernameAvailable(JWTPayload.username);
             if(personDoesNotExist) {
-                res.clearCookie('personAuth');
+                res.clearCookie(this.AUTH_COOKIE_NAME);
                 res.status(401).json({
                     error: 'Unauthorized. Invalid auth token'
                 });
@@ -49,14 +65,13 @@ class Authorization {
             }
             return true;
         } catch (err) {
-            res.clearCookie('personAuth');
+            res.clearCookie(this.AUTH_COOKIE_NAME);
             res.status(401).json({
                 error: 'Unauthorized. Invalid auth token'
             });
             return false;
         }
     }
-
 }
 
 module.exports = Authorization;
