@@ -39,9 +39,15 @@ class SignInApi extends RequestHandler {
             this.router.post(
                 '/', 
                 check('username', 'Fill in the username field.')
-                    .notEmpty(),
+                    .notEmpty()
+                    .isAlphanumeric()
+                    .withMessage('Invalid username.')
+                    .stripLow(true)
+                    .escape(),
                 check('password', 'Fill in the password field.')
-                    .notEmpty(),
+                    .notEmpty()
+                    .stripLow(true)
+                    .escape(),
                 async (req, res, next) => {
                     try {
                         const errors = validationResult(req);
